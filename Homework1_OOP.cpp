@@ -6,13 +6,14 @@ class Vector
     int * v;            // vectorul dinamic
     int n;              //lungimea acestuia
 public:
-    Vector(int n, int x);               //constructor de initializare a unui vector de lungime n cu valorile x;
+    Vector();                           //constructor de initializare
+    Vector(int n, int x);               //constructor de initializare a unui vector de lungime n cu componentele avand valoarea x;
     Vector(const Vector & vec);         //copy constructor
     ~Vector();                          //destructorul
     Vector & operator =(const Vector & vec)
     {
-        if(this != &vec)                            //verificam daca nu incercam sa atribuim unui obiect acelasi obiect
-        {                                           //o astfel de op ar produce erori si pe langa asta este si trivial
+        if(this != &vec)                            //verificam daca nu cumva incercam sa atribuim unui obiect acelasi
+        {                                           //obiect deoarece o astfel de op ar produce erori
             if(this -> v != NULL)delete [] this -> v;           //destructorul
             this -> v = new int[vec.n];                         //copy-constructorul
             this -> n = vec.n;
@@ -26,6 +27,10 @@ public:
     void do_sort();                      //metoda publica de sortare a vectorului
 
 };
+Vector::Vector()
+{
+    this -> n = 0;
+}
 Vector::Vector(int n, int x)
 {
     this -> v = new int[n + 5];                    // aloc memorie cat sa incapa vectorul + 5 slot-uri suplimentare de siguranta
@@ -81,7 +86,7 @@ void Vector::do_sort()             //metoda Bubble-sort
 {
     while(true)
     {
-        bool changes_made = false;                 // ramane fals doar daca nu se fac schimbari, adica cand vectorul este sort
+        bool changes_made = false;                 // ramane fals doar daca nu se fac schimbari, adica cand vectorul este sortat
         for(int i = 1; i < this -> n; i ++)
             if(v[i - 1] > v[i])                                    // n-am mai pus this -> pentru lizibilitate
             {
@@ -100,7 +105,10 @@ int main()
 {
     cout << "Introduceti lungimea si valoarea tuturor elementelor vectorului(in aceasta ordine):";
     cin >> n >> x;
-    Vector A(n, x);           // vom lucra asupra vectolui A
+    Vector A(n, x);           // vom lucra asupra obiectului(vectorului) A
+    //Vector B(n, x);
+    //Vector A;                            // verificare supraincarcarea egalului si constructorului de initializare
+    //A = B;
     cout << "\n";
     bool ok = true;
     while(ok)
