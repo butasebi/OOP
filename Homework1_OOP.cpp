@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-const int minim_absolut = -INT_MAX;         //folosit in metoda get_max()
+const int minim_absolut = -INT_MAX;         //folosit in metoda get_max(), linia 126
 class Vector
 {
     int * v;            // vectorul dinamic
@@ -12,10 +12,10 @@ public:
     Vector(int n, int x);               //constructor de initializare a unui vector de lungime n cu componentele avand valoarea x;
     Vector(const Vector & vec);         //copy constructor
     Vector & operator =(const Vector & vec);    //supraincarcarea operatorului de atribuire
-    void set_size(int n);                       //setter de marime
-    void set_vector(int * vec, int n);
+    void set_size(int n);                       //setter de marime, tinand cont ca toate elementele sunt egale dupa schimbarea marimii actualizam cele n elemente cu valoarea elementelor vectorului inainte de apelarea seterului
+    void set_vector(int * vec, int n);          //setter vector
     int get_size();                             //getter de marime
-    int * get_vector();                         //getter de valoare a elementelor vectorului
+    int * get_vector();                         //getter vector
     void vec_actualizare(int n, int x);         //metoda publica de actualizare a numarului de componente a vectorului cu n si actualizarea acestora cu x
     int get_sum();                              //metoda publica de obtinere a sumei numerelor din vector
     void get_max();                             //metoda publica de obtinere a elementului maxim si pozitia sa din vector(considerand vector indexat de la 1)
@@ -39,7 +39,7 @@ ostream & operator << (ostream & out, const Vector & vec)
 {
     out << "\n" << "Lungimea vectorului: " << vec.n << "\n";
     out << "Elementele vectorului: ";
-    for(int i = 0; i < vec.n; i ++)                  // citim vectorul
+    for(int i = 0; i < vec.n; i ++)
         out << vec.v[i] << " ";
     out << "\n";
     return out;
@@ -80,6 +80,7 @@ Vector::~Vector()                                      //destructorul
     delete [] this -> v;
 }
 //Metode publice
+//Geteri si seteri
 void Vector :: set_size(int n)
 {
     this -> n = n;
@@ -92,6 +93,7 @@ void Vector :: set_size(int n)
 void Vector :: set_vector(int * vec, int n)                  //primeste vectorul si marimea acestuia
 {
     if(this -> v != NULL)delete [] this -> v;
+    this -> v = new int [n + 5];                              //realocam memoria vectorului
     this -> n = n;
     for(int i = 0; i < this -> n; i ++)
         this -> v[i] = vec[i];
@@ -124,15 +126,15 @@ int Vector::get_sum()
 void Vector::get_max()
 {
     //cout << "Elementul maxim este " << this -> v[0] << " si prima sa pozitie din vector este " << 1; //caz particular cu toate elementele vectorului egale
-    int maxx = minim_absolut;
+    int maxx = minim_absolut;              //declarat la linia 3 cu const
     int poz = -1;            // poz-ul are nevoie de actualizare deoarece exista cazul in care vectorul e gol
     for(int i = 0; i < this -> n; i ++)
         if(this -> v[i] > maxx)maxx = this -> v[i], poz = i + 1;
-    if(poz == -1)            //poz = -1 inseamna vector gol, cum am zis si mai sus
+    if(poz == -1)            //poz = -1 inseamna ca vector este gol
     {
         cout << "Vectorul este gol!\n";
     }
-    else                         // in caz contrar, avem vectorul si deci avem maxim si pozitie de afisat
+    else                         // in caz contrar, avem vector si deci avem maxim si pozitie de afisat
     {
         cout << "Elementul maxim este " << maxx << " si prima pozitie din vector in care apare este " << poz << "\n";
     }
@@ -142,13 +144,13 @@ void Vector::do_sort()             //metoda Bubble-sort
     while(true)
     {
         bool changes_made = false;                 // ramane fals doar daca nu se fac schimbari, adica cand vectorul este sortat
-        for(int i = 1; i < this -> n; i ++)
+        for(int i = 1; i < this -> n; i ++)     //i = 1 deoarece comparam fiecare element cu precedentul, perechile (0, 1); (1, 2) ... (i - 1, i)
             if(v[i - 1] > v[i])                                    // n-am mai pus this -> pentru lizibilitate
             {
                 int aux = v[i];
-                v[i] = v[i - 1];                                //swap
+                v[i] = v[i - 1];                                //swap(v[i], v[i - 1])
                 v[i - 1] = aux;
-                changes_made = true;
+                changes_made = true;                    // avem un swap facut, inseamna ca vectorul nu era sortat
             }
         if(changes_made == false)break;              //doar cand ramane fals iesim din bucla infinita
     }
@@ -194,7 +196,7 @@ int main()
             {
                 cout << "Introduceti lungimea si valoarea tuturor elementelor vectorului(in aceasta ordine):";
                 cin >> n >> x;
-                A.vec_actualizare(n, x);    // functia imi rezolva si afisarea asa ca nu mai este nevoie de inca un cout;
+                A.vec_actualizare(n, x);    // functia imi rezolva si afisarea
                 break;
             }
         case 2:
